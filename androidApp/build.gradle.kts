@@ -77,11 +77,11 @@ tasks.register("removeProguardMap") {
     notCompatibleWithConfigurationCache("Uses ZipFile/ZipOutputStream from script scope")
     doLast {
         val generatedAabPath = "${projectDir}/release"
-        val aabFile = file("${generatedAabPath}/composeApp-release.aab")
+        val aabFile = file("${generatedAabPath}/androidApp-release.aab")
 
-        val zipFile = file("${generatedAabPath}/composeApp-release.zip")
+        val zipFile = file("${generatedAabPath}/androidApp-release.zip")
         val savedProguardMapFile = file("${generatedAabPath}/proguard.map")
-        val tempZipFilePath = file("${generatedAabPath}/composeApp-release-temp.zip")
+        val tempZipFilePath = file("${generatedAabPath}/androidApp-release-temp.zip")
         val targetFilePath = "BUNDLE-METADATA/com.android.tools.build.obfuscation/proguard.map"
 
         aabFile.renameTo(zipFile)
