@@ -41,6 +41,7 @@ class MainActivity : ComponentActivity() {
         initAppStorage(applicationContext)
         hideSystemBars()
         setContent {
+
             App()
         }
     }
