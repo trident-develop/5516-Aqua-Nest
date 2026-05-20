@@ -53,7 +53,7 @@ import org.example.project.storage.currentTimeMs
 import org.example.project.theme.AquariumColors
 
 private const val ANDROID_PRIVACY_URL = "https://telegra.ph/Privacy-Policy-for-Aqua-Nest-05-15"
-private const val IOS_PRIVACY_URL = "https://telegra.ph/Privacy-Policy-for-Deep-Lake-Story-05-15"
+private const val IOS_PRIVACY_URL = "https://telegra.ph/Privacy-Policy-for-Deep-Lake-Story-05-20"
 private const val IOS_TERMS_URL = "https://telegra.ph/Terms--Conditions-for-Deep-Lake-Story-05-15"
 
 private data class AquariumVisuals(
