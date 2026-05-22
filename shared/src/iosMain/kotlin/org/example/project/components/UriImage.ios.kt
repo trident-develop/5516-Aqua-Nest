@@ -21,7 +21,17 @@ import platform.posix.memcpy
 actual fun UriImage(uri: String, modifier: Modifier) {
     val bitmap = remember(uri) {
         runCatching {
-            val url = NSURL.URLWithString(uri) ?: return@runCatching null
+            // NSURL.URLWithString rejects URIs with unencoded spaces, and the
+            // iOS Application Support directory contains a space — so a naive
+            // "file://" + path string fails to parse on iOS 15/16. For "file://"
+            // URIs interpret the suffix as a raw path via fileURLWithPath, which
+            // handles spaces correctly. Fall back to URLWithString for any
+            // other scheme.
+            val url: NSURL = if (uri.startsWith("file://")) {
+                NSURL.fileURLWithPath(uri.removePrefix("file://"))
+            } else {
+                NSURL.URLWithString(uri) ?: return@runCatching null
+            }
             val data: NSData = NSData.dataWithContentsOfURL(url) ?: return@runCatching null
             val bytes = data.toByteArray()
             SkiaImage.makeFromEncoded(bytes).toComposeImageBitmap()

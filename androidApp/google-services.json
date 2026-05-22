@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:760403771654:android:249fcbe88a01d6c3529e87",
+        "mobilesdk_app_id": "1:760403771654:android:eeaa4d6e4ec7fb84529e87",
         "android_client_info": {
-          "package_name": "com.ludia.jurassicwo"
+          "package_name": "com.security.xvpn.z35"
         }
       },
       "oauth_client": [],

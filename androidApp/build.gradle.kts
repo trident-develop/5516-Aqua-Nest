@@ -32,15 +32,15 @@ dependencies {
 }
 
 android {
-    namespace = "com.ludia.jurassicwo"
+    namespace = "com.security.xvpn.z35"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.ludia.jurassicwo"
+        applicationId = "com.security.xvpn.z35"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.1"
     }
     packaging {
         resources {

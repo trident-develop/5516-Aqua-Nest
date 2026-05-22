@@ -171,6 +171,7 @@ fun CareAnalyticsScreen() {
                 ProfileCard(
                     profile = store.profile,
                     isEditing = showProfileEditor,
+                    canCancel = store.profileSet,
                     onEdit = { showProfileEditor = true },
                     onSave = { p ->
                         store.saveProfile(p)
@@ -466,11 +467,17 @@ private fun PeriodChip(label: String, active: Boolean, onClick: () -> Unit) {
 private fun ProfileCard(
     profile: HydrationProfile,
     isEditing: Boolean,
+    canCancel: Boolean,
     onEdit: () -> Unit,
     onSave: (HydrationProfile) -> Unit,
     onCancel: () -> Unit,
 ) {
-    if (isEditing) ProfileEditor(initial = profile, onSave = onSave, onCancel = onCancel)
+    if (isEditing) ProfileEditor(
+        initial = profile,
+        canCancel = canCancel,
+        onSave = onSave,
+        onCancel = onCancel,
+    )
     else ProfileSummary(profile = profile, onEdit = onEdit)
 }
 
@@ -538,6 +545,7 @@ private fun ProfileStat(label: String, value: String) {
 @Composable
 private fun ProfileEditor(
     initial: HydrationProfile,
+    canCancel: Boolean,
     onSave: (HydrationProfile) -> Unit,
     onCancel: () -> Unit,
 ) {
@@ -617,12 +625,14 @@ private fun ProfileEditor(
             )
 
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                SecondaryButton(
-                    text = "Cancel",
-                    onClick = onCancel,
-                    leadingGlyph = "✕",
-                    modifier = Modifier.weight(1f),
-                )
+                if (canCancel) {
+                    SecondaryButton(
+                        text = "Cancel",
+                        onClick = onCancel,
+                        leadingGlyph = "✕",
+                        modifier = Modifier.weight(1f),
+                    )
+                }
                 PrimaryButton(
                     text = "Save",
                     onClick = { onSave(preview) },

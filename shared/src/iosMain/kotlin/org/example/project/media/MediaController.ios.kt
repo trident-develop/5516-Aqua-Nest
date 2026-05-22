@@ -13,6 +13,7 @@ import platform.AVFoundation.AVMediaTypeVideo
 import platform.AVFoundation.authorizationStatusForMediaType
 import platform.AVFoundation.requestAccessForMediaType
 import platform.Foundation.NSApplicationSupportDirectory
+import platform.Foundation.NSData
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSItemProvider
 import platform.Foundation.NSOperationQueue
@@ -21,6 +22,7 @@ import platform.Foundation.NSTemporaryDirectory
 import platform.Foundation.NSURL
 import platform.Foundation.NSUUID
 import platform.Foundation.NSUserDomainMask
+import platform.Foundation.dataWithContentsOfURL
 import platform.Foundation.writeToFile
 import platform.PhotosUI.PHPickerConfiguration
 import platform.PhotosUI.PHPickerFilter
@@ -35,8 +37,12 @@ import platform.UIKit.UIImagePickerControllerDelegateProtocol
 import platform.UIKit.UIImagePickerControllerOriginalImage
 import platform.UIKit.UIImagePickerControllerSourceType
 import platform.UIKit.UINavigationControllerDelegateProtocol
+import platform.UIKit.UISceneActivationStateForegroundActive
 import platform.UIKit.UIViewController
+import platform.UIKit.UIWindow
+import platform.UIKit.UIWindowScene
 import platform.darwin.NSObject
+import org.example.project.composeHostViewController
 
 private val retainedDelegates = mutableListOf<NSObject>()
 
@@ -122,13 +128,42 @@ private class IosMediaController : MediaController {
     }
 }
 
+// Prefer presenting from the Compose host view controller — it's guaranteed to
+// be in the active view hierarchy on iOS 15/16, where UIApplication.keyWindow
+// is unreliable under SwiftUI's scene-based lifecycle. If for some reason the
+// Compose host is not registered yet, fall back to walking connectedScenes.
 private fun rootViewController(): UIViewController? {
-    val window = UIApplication.sharedApplication.keyWindow ?: return null
-    var controller = window.rootViewController
-    while (controller?.presentedViewController != null) {
-        controller = controller.presentedViewController
+    val base = composeHostViewController ?: findKeyWindow()?.rootViewController ?: return null
+    var controller: UIViewController = base
+    while (controller.presentedViewController != null) {
+        controller = controller.presentedViewController ?: break
     }
     return controller
+}
+
+private fun findKeyWindow(): UIWindow? {
+    val app = UIApplication.sharedApplication
+    val scenes = app.connectedScenes
+    var fallbackScene: UIWindowScene? = null
+    var activeScene: UIWindowScene? = null
+    for (scene in scenes) {
+        val windowScene = scene as? UIWindowScene ?: continue
+        if (windowScene.activationState == UISceneActivationStateForegroundActive) {
+            activeScene = windowScene
+            break
+        }
+        if (fallbackScene == null) fallbackScene = windowScene
+    }
+    val chosen = activeScene ?: fallbackScene
+    if (chosen != null) {
+        val windows = chosen.windows
+        for (w in windows) {
+            val window = w as? UIWindow ?: continue
+            if (window.isKeyWindow()) return window
+        }
+        (windows.firstOrNull() as? UIWindow)?.let { return it }
+    }
+    return app.keyWindow
 }
 
 @OptIn(ExperimentalForeignApi::class)
@@ -153,13 +188,15 @@ private fun saveImageToTemp(image: UIImage): String? {
     return if (ok) "file://$path" else null
 }
 
+// Decode the picked file as a UIImage and re-encode to JPEG. Photos picked
+// from the iOS 15/16 photo library are typically HEIC, which Skia (used by
+// Compose Multiplatform for image decoding) cannot read. Re-encoding ensures
+// the saved file is a JPEG that UriImage can actually render.
 @OptIn(ExperimentalForeignApi::class)
-private fun copyToTemp(source: NSURL): String? {
-    val srcPath = source.path ?: return null
-    val destPath = "${fishPhotosDirectory()}/aquanest_${NSUUID().UUIDString}.jpg"
-    NSFileManager.defaultManager.removeItemAtPath(destPath, error = null)
-    val ok = NSFileManager.defaultManager.copyItemAtPath(srcPath, toPath = destPath, error = null)
-    return if (ok) "file://$destPath" else null
+private fun saveItemProviderFileAsJpeg(source: NSURL): String? {
+    val data = NSData.dataWithContentsOfURL(source) ?: return null
+    val image = UIImage(data = data)
+    return saveImageToTemp(image)
 }
 
 @OptIn(BetaInteropApi::class)
@@ -202,7 +239,7 @@ private class GalleryDelegate(
             }
             val provider: NSItemProvider = result.itemProvider
             provider.loadFileRepresentationForTypeIdentifier("public.image") { url, _ ->
-                val uri = url?.let { copyToTemp(it) }
+                val uri = url?.let { saveItemProviderFileAsJpeg(it) }
                 NSOperationQueue.mainQueue.addOperationWithBlock {
                     retainedDelegates.remove(this)
                     onComplete(uri)
