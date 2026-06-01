@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
+    alias(libs.plugins.lsparanoid)
 }
 
 kotlin {
@@ -17,6 +18,11 @@ kotlin {
     }
 }
 dependencies {
+    implementation(libs.flow.extensions)
+    implementation(libs.immutable.collections)
+    implementation(libs.installreferrer)
+    implementation(libs.fuel)
+    implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.splashscreen)
     implementation(libs.play.services.ads)
     implementation(libs.firebase.messaging)
@@ -39,8 +45,8 @@ android {
         applicationId = "com.security.xvpn.z35"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 2
-        versionName = "1.1"
+        versionCode = 3
+        versionName = "1.2"
     }
     packaging {
         resources {

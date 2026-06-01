@@ -55,6 +55,7 @@ import kotlinx.coroutines.delay
 import org.example.project.care.computeHealth
 import org.example.project.care.rememberTankCare
 import org.example.project.components.GlassCard
+import org.example.project.components.QuitGame
 import org.example.project.data.SampleData
 import org.example.project.hydration.rememberHydrationStore
 import org.example.project.hydration.todayTotalMl
@@ -74,6 +75,7 @@ private data class AttentionItem(
 
 @Composable
 fun DashboardScreen() {
+    QuitGame()
     val hydration = rememberHydrationStore()
     val tanks = remember { (0 until SampleData.tanks.size).toList() }
         .map { rememberTankCare(it) }

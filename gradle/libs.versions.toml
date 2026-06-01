@@ -1,7 +1,7 @@
 [versions]
 agp = "9.0.1"
 android-compileSdk = "36"
-android-minSdk = "24"
+android-minSdk = "28"
 android-targetSdk = "36"
 androidx-activity = "1.13.0"
 androidx-appcompat = "1.7.1"
@@ -20,6 +20,12 @@ gmsAds = "25.1.0"
 firebaseMessaging = "25.0.1"
 firebaseBom = "34.10.0"
 firebase-crashlytics-gradle = "3.0.6"
+fragmentKtx = "1.8.9"
+lsparanoid = "0.6.0"
+installreferrer = "2.2"
+flowExtensions = "0.0.14"
+immutableCollections = "0.4.0"
+fuel = "2.3.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -50,6 +56,11 @@ firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging
 play-services-ads = { group = "com.google.android.gms", name = "play-services-ads", version.ref = "gmsAds" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
+androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
+installreferrer = { module = "com.android.installreferrer:installreferrer", version.ref = "installreferrer" }
+flow-extensions = { module = "com.github.akarnokd:kotlin-flow-extensions", version.ref = "flowExtensions" }
+immutable-collections = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "immutableCollections" }
+fuel = { module = "com.github.kittinunf.fuel:fuel", version.ref = "fuel" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -59,3 +70,4 @@ composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "k
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 google-services = { id = "com.google.gms.google-services", version = "4.4.4" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics-gradle" }
+lsparanoid = { id = "org.lsposed.lsparanoid", version.ref = "lsparanoid" }

@@ -43,6 +43,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.example.project.components.AquariumBackground
+import org.example.project.components.BlockSystemBack
 import org.example.project.theme.AquariumColors
 import kotlin.math.PI
 import kotlin.math.cos
@@ -52,6 +53,7 @@ private const val TWO_PI: Float = (2.0 * PI).toFloat()
 
 @Composable
 fun LoadingScreen() {
+    BlockSystemBack()
     AquariumBackground(bubbleCount = 24, fishCount = 4) {
         Box(modifier = Modifier.fillMaxSize()) {
             BackgroundWaves(modifier = Modifier.fillMaxSize())
