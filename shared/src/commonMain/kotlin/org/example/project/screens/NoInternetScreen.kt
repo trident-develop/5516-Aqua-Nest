@@ -1,5 +1,6 @@
 package org.example.project.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,65 +19,82 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import aquanest.shared.generated.resources.Res
+import aquanest.shared.generated.resources.loading
 import org.example.project.components.AquariumBackground
+import org.example.project.components.BlockSystemBack
 import org.example.project.theme.AquariumColors
+import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun NoInternetScreen(onRetry: () -> Unit) {
-    AquariumBackground(bubbleCount = 22, fishCount = 5){
+    BlockSystemBack()
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        Image(
+            painter = painterResource(Res.drawable.loading),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize()
+        )
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black.copy(0.7f)),
-            contentAlignment = Alignment.Center,
+                .background(Color.Black.copy(0.7f))
+        )
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.padding(horizontal = 40.dp)
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-                modifier = Modifier.padding(horizontal = 40.dp)
+            Text(
+                text = "📡",
+                fontSize = 64.sp
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            Text(
+                text = "No Connection",
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.Bold,
+                color = Color.White,
+                textAlign = TextAlign.Center
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = "Check your internet connection and try again.",
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.White,
+                textAlign = TextAlign.Center
+            )
+            Spacer(modifier = Modifier.height(40.dp))
+            Button(
+                onClick = onRetry,
+                modifier = Modifier
+                    .fillMaxWidth(0.6f)
+                    .height(52.dp),
+                shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = AquariumColors.MidOcean,
+                    contentColor = Color.White,
+                )
             ) {
                 Text(
-                    text = "📡",
-                    fontSize = 64.sp
+                    text = "Retry",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
                 )
-                Spacer(modifier = Modifier.height(24.dp))
-                Text(
-                    text = "No Connection",
-                    style = MaterialTheme.typography.headlineLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White,
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-                Text(
-                    text = "Check your internet connection and try again.",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White,
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(40.dp))
-                Button(
-                    onClick = onRetry,
-                    modifier = Modifier
-                        .fillMaxWidth(0.6f)
-                        .height(52.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = AquariumColors.LimeDeep,
-                        contentColor = Color.White,
-                    )
-                ) {
-                    Text(
-                        text = "Retry",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
             }
         }
     }
@@ -114,5 +132,5 @@ fun NoInternetScreen(onRetry: () -> Unit) {
 
 @Composable
 private fun ScreenPreview() {
-    NoInternetScreen {  }
+    NoInternetScreen { }
 }
